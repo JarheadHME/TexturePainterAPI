@@ -21,7 +21,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     float4 colFromMaskB = _TintB * _MaskB[id.xy];
     float4 colFromMaskC = _TintC * _MaskC[id.xy];
 
-    float blendedColor = blendColor(colFromMaskA, _BaseTexture[id.xy]);
+    float4 blendedColor = blendColor(colFromMaskA, _BaseTexture[id.xy]);
     blendedColor = blendColor(colFromMaskB, blendedColor);
     blendedColor = blendColor(colFromMaskC, blendedColor);
     _Result[id.xy] = blendedColor;

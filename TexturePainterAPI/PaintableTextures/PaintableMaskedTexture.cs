@@ -105,4 +105,10 @@ public class PaintableMaskedTexture : PaintableTexture
         Graphics.CopyTexture(_ResultTexture, newTexture);
         return newTexture;
     }
+
+    public override void Dispose()
+    {
+        if (_ResultTexture != null)
+            UnityEngine.Object.Destroy(_ResultTexture);
+    }
 }

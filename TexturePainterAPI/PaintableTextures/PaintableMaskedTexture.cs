@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace TexturePainterAPI.PaintableTextures;
 public class PaintableMaskedTexture : PaintableTexture
 {
+    private static RenderTexture _TempRT;
+
     private Texture2D _MainTexture;
     private Texture2D _MaskA, _MaskB, _MaskC;
     private Color _TintA, _TintB, _TintC;
 
-    private Texture2D _ResultTexture;
+    private RenderTexture _ResultTexture;
 
     private bool _IsReady = false;
 
@@ -36,8 +39,13 @@ public class PaintableMaskedTexture : PaintableTexture
             UnityEngine.Object.Destroy(_ResultTexture);
         }
 
-        _ResultTexture = new Texture2D(mainTexture.width, mainTexture.height, TextureFormat.ARGB32, true, false);
-        _ResultTexture.hideFlags = HideFlags.HideAndDontSave;
+        _ResultTexture = new RenderTexture(_MainTexture.width, _MainTexture.height, 1, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB)
+        {
+            name = "PaintableMaskedTexture",
+            enableRandomWrite = true,
+            hideFlags = HideFlags.HideAndDontSave
+        };
+        _ResultTexture.Create();
     }
 
     public void SetMaskTexture(Texture2D mask1)
@@ -83,7 +91,7 @@ public class PaintableMaskedTexture : PaintableTexture
 
         var width = _MainTexture.width;
         var height = _MainTexture.height;
-        var tempRT = RenderTexture.GetTemporary(width, height, 1, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+
         var cs = Assets.Tint3MaskCS;
         var kernel = Assets.Tint3MaskKernel;
 
@@ -91,22 +99,22 @@ public class PaintableMaskedTexture : PaintableTexture
         cs.SetTexture(kernel, P.MaskA, _MaskA);
         cs.SetTexture(kernel, P.MaskB, _MaskB);
         cs.SetTexture(kernel, P.MaskC, _MaskC);
-        cs.SetTexture(kernel, P.Result, tempRT);
+        cs.SetTexture(kernel, P.Result, _ResultTexture);
         cs.SetVector(P.TintA, _TintA);
         cs.SetVector(P.TintB, _TintB);
         cs.SetVector(P.TintC, _TintC);
         cs.Dispatch(kernel, width, height, 1);
-        Graphics.CopyTexture(tempRT, _ResultTexture);
     }
 
     public override Texture CreateCopy()
     {
         var newTexture = new Texture2D(_MainTexture.width, _MainTexture.height, TextureFormat.ARGB32, true, false);
         Graphics.CopyTexture(_ResultTexture, newTexture);
+        newTexture.Apply();
         return newTexture;
     }
 
-    public override void Dispose()
+    public override void Destroy()
     {
         if (_ResultTexture != null)
             UnityEngine.Object.Destroy(_ResultTexture);

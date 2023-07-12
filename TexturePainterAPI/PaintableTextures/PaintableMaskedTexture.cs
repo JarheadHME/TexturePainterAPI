@@ -43,7 +43,8 @@ public class PaintableMaskedTexture : PaintableTexture
         {
             name = "PaintableMaskedTexture",
             enableRandomWrite = true,
-            hideFlags = HideFlags.HideAndDontSave
+            hideFlags = HideFlags.HideAndDontSave,
+            useMipMap = false
         };
         _ResultTexture.Create();
     }

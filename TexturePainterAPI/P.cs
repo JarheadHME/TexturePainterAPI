@@ -8,12 +8,11 @@ using UnityEngine;
 namespace TexturePainterAPI;
 internal static class P
 {
-    public static readonly int BaseTexture = Shader.PropertyToID("_BaseTexture");
-    public static readonly int MaskA = Shader.PropertyToID("_MaskA");
-    public static readonly int MaskB = Shader.PropertyToID("_MaskB");
-    public static readonly int MaskC = Shader.PropertyToID("_MaskC");
-    public static readonly int TintA = Shader.PropertyToID("_TintA");
-    public static readonly int TintB = Shader.PropertyToID("_TintB");
-    public static readonly int TintC = Shader.PropertyToID("_TintC");
-    public static readonly int Result = Shader.PropertyToID("_Result");
+    public static readonly int MaskTex = Shader.PropertyToID("_MaskTex");
+    public static readonly int MaskTexA = Shader.PropertyToID("_MaskTexA");
+    public static readonly int MaskTexB = Shader.PropertyToID("_MaskTexB");
+    public static readonly int MaskTexC = Shader.PropertyToID("_MaskTexC");
+    public static readonly int MaskColA = Shader.PropertyToID("_MaskColA");
+    public static readonly int MaskColB = Shader.PropertyToID("_MaskColB");
+    public static readonly int MaskColC = Shader.PropertyToID("_MaskColC");
 }

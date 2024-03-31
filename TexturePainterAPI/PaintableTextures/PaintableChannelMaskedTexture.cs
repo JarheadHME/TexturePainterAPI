@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace TexturePainterAPI.PaintableTextures;
-public class PaintableMaskedTexture : PaintableTexture
+public class PaintableChannelMaskedTexture : PaintableTexture
 {
     private Texture2D _MainTexture;
-    private Texture2D _MaskA, _MaskB, _MaskC;
+    private Texture2D _MaskTexture;
     private Color _TintA, _TintB, _TintC;
 
     private RenderTexture _ResultTexture;
@@ -19,7 +18,7 @@ public class PaintableMaskedTexture : PaintableTexture
 
     public override Texture CurrentTexture => _ResultTexture;
 
-    public PaintableMaskedTexture(Texture2D mainTexture)
+    public PaintableChannelMaskedTexture(Texture2D mainTexture)
     {
         SetMainTexture(mainTexture);
         SetMaskTexture(Texture2D.whiteTexture);
@@ -46,21 +45,9 @@ public class PaintableMaskedTexture : PaintableTexture
         _ResultTexture.Create();
     }
 
-    public void SetMaskTexture(Texture2D mask1)
+    public void SetMaskTexture(Texture2D mask)
     {
-        SetMaskTexture(mask1, Texture2D.whiteTexture, Texture2D.whiteTexture);
-    }
-
-    public void SetMaskTexture(Texture2D mask1, Texture2D mask2)
-    {
-        SetMaskTexture(mask1, mask2, Texture2D.whiteTexture);
-    }
-
-    public void SetMaskTexture(Texture2D mask1, Texture2D mask2, Texture2D mask3)
-    {
-        _MaskA = mask1;
-        _MaskB = mask2;
-        _MaskC = mask3;
+        _MaskTexture = mask;
         UpdateTexture();
     }
 
@@ -87,10 +74,8 @@ public class PaintableMaskedTexture : PaintableTexture
         if (!_IsReady)
             return;
 
-        var mat = Assets.Tint3MaskMat;
-        mat.SetTexture(P.MaskTexA, _MaskA);
-        mat.SetTexture(P.MaskTexB, _MaskB);
-        mat.SetTexture(P.MaskTexC, _MaskC);
+        var mat = Assets.Tint3MaskCompMat;
+        mat.SetTexture(P.MaskTex, _MaskTexture);
         mat.SetColor(P.MaskColA, _TintA);
         mat.SetColor(P.MaskColB, _TintB);
         mat.SetColor(P.MaskColC, _TintC);
@@ -112,3 +97,4 @@ public class PaintableMaskedTexture : PaintableTexture
             UnityEngine.Object.Destroy(_ResultTexture);
     }
 }
+

@@ -9,12 +9,12 @@ using UnityEngine;
 namespace TexturePainterAPI;
 internal static class Assets
 {
-    public static ComputeShader Tint3MaskCS;
-    public static int Tint3MaskKernel;
+    public static Material Tint3MaskMat;
+    public static Material Tint3MaskCompMat;
 
     public static void Init()
     {
-        Tint3MaskCS = AssetAPI.GetLoadedAsset<ComputeShader>("Assets/Modding/TexturePainter/3MaskTint.compute");
-        Tint3MaskKernel = Tint3MaskCS.FindKernel("CSMain");
+        Tint3MaskMat = AssetAPI.GetLoadedAsset<Material>("Assets/Modding/TexturePainter/3MaskTintMat.mat");
+        Tint3MaskCompMat = AssetAPI.GetLoadedAsset<Material>("Assets/Modding/TexturePainter/3MaskTintCompressedMat.mat");
     }
 }

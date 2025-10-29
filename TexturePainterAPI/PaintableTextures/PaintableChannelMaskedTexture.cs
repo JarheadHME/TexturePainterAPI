@@ -84,9 +84,8 @@ public class PaintableChannelMaskedTexture : PaintableTexture
 
     public override Texture CreateCopy()
     {
-        var newTexture = new Texture2D(_MainTexture.width, _MainTexture.height, TextureFormat.ARGB32, true, false);
+        var newTexture = new Texture2D(_MainTexture.width, _MainTexture.height, TextureFormat.ARGB32, false, false);
         Graphics.CopyTexture(_ResultTexture, newTexture);
-        newTexture.Apply();
         newTexture.hideFlags = HideFlags.HideAndDontSave;
         return newTexture;
     }
